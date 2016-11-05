@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+
+main()
+
+
+function main () {
+	var args = process.argv.slice(2);
+	var cwd = path.resolve('.')
+	var command = args[0]
+	var option = args[1]
+
+
+	switch (command) {
+		case 'make:controller':
+			write(`${cwd}/controllers/${option}.js`, loadTemplate('controller.stub'))
+			break;
+		case 'make:model':
+			write(`${cwd}/model/${option}.js`, loadTemplate('model.stub'))
+			break;
+		case 'make:view':
+			write(`${cwd}/view/${option}.pug`, loadTemplate('view.stub'))
+			break;
+		default:
+
+			menu({ 
+				header : 'Ertisan - Artisan for Express.js',
+				body : [
+					{ 
+						type: 'group',
+						parent: 'make',
+						child: ['controller', 'model', 'view']
+					}
+				]
+			})
+
+			break;
+	}
+
+}
+
+function menu(data) {	
+	print(data.header+"\n")
+	print("Usage")
+	print(" ertisan [command]")
+	print()
+	print("Available Commands")
+	data.body.forEach((v) => {
+		print(` ${v.parent}`)
+		v.child.forEach((cv) => {
+			print(`  ${v.parent}:${cv}`)
+		});
+	})
+}
+
+function print(msg) {
+	console.log(msg || "")
+}
+
+
+function loadTemplate(name) {
+  return fs.readFileSync(path.join(__dirname, '..', 'stubs', name), 'utf-8');
+}
+
+function write(path, str, mode) {
+	var dir = path.split('/')
+	var filename = dir[dir.length -1].split('.')[0]  
+	delete dir[dir.length -1]
+	dir = dir.join('/')
+
+
+	fs.stat(dir, function(err){
+		if (err) fs.mkdir(dir)
+
+		str = str.replace(/##/g, filename)
+	  fs.writeFileSync(path, str, { mode: mode || 0666 });
+	  console.log('\x1b[36mcreate\x1b[0m : ' + path);
+
+	})
+}

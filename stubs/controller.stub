@@ -1,0 +1,81 @@
+let mongoose = require('mongoose')
+let ## = require('../models/##')
+
+/**
+ * ## Controller
+ */
+module.exports.controller = function(app) {
+
+/**
+ * index
+ */
+  app.get('/##s', function(req, res, next) {
+		##.find({}, function(err, ##s) {
+		  if (err) throw err
+		  res.render('##s/index', { data: { ##s } })
+		})
+  })  
+
+/**
+ * create
+ */
+  app.get('/##s/create', function(req, res, next) {
+    res.render('##s/_form', {
+      action: 'Create'
+    })
+  })  
+
+/**
+ * store
+ */
+  app.post('/##s', function(req, res, next) {
+    res.json(req.body)
+  })  
+
+/**
+ * show
+ */
+  app.get('/##s/:id', function(req, res, next) {
+    ##.findOne({_id : req.params.id}, function(err, ##) {
+      if (err) throw err
+      res.render('##s/show', {
+        ##: ## 
+      })
+    })
+  })  
+
+/**
+ * edit
+ */
+  app.get('/##s/:id/edit', function(req, res, next) {
+    ##.findOne({_id : req.params.id}, function(err, ##) {
+      if (err) throw err
+      res.render('##s/_form', {
+        action: 'Edit',
+        ##: ## 
+      })
+    })
+  })  
+
+/**
+ * update
+ */
+  app.put('/##s/:id', function(req, res, next) {
+  	##.findOne({_id : req.params.id}, function(err, ##) {
+      if (err) throw err
+      console.log("## will be update", ##)
+      res.redirect('/##s')
+    })
+  })  
+
+/**
+ * delete
+ */
+  app.delete('/##s/:id', function(req, res, next) {
+    ##.findOne({_id : req.params.id}, function(err, ##) {
+      if (err) throw err
+      ##.remove()
+      res.redirect('/##s')
+    })
+  })  
+}
